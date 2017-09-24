@@ -43,6 +43,43 @@ I have cleaned up the .hex file and it should load and run without further modif
 
 The original files are contained in the appropriate subdirectory.
 
+## VTL-2
+
+VTL-2 is the implementation of a Very Tiny Language for the Altair 8800.
+
+Tom Lake made the port from a ROM image to a .hex file.
+
+VTL stores a number of system variable in different symbols. The documentation recommends that after loading and getting the 'OK' message, you set the memory size using the command "*=1204" for a system with 1K of memory. The 
+
+
+Execute the following two statements FIRST:
+
+*=1024*62
+
+&=320
+
+(&=320 is like NEW or SCRATCH in BASIC)
+
+? is like PRINT in BASIC, # is like GOTO.
+
+To LIST a program, type the digit 0 and press enter.
+
+To RUN a program, type
+
+#=line-number
+
+where line-number is the line at which you want to start the program.
+
+To erase a program (like NEW or SCRATCH in BASIC) type
+
+&=320
+
+To find out how much memory is left (like FRE in BASIC) type
+
+?=*-&
+
+
+
 ## XYBASIC
 
 XYBASIC was a commercial product that has been resurected and released for non-commercial use. The original .hex file found here worked fine as-is:
