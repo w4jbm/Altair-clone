@@ -7,7 +7,7 @@ These .hex files can be loaded on the Arduino-based Altair clone using the built
 * From power up, hit STOP and then RESET.
 * Hold STOP+AUX1(UP) to enter the setup menu.
 * From the terminal, enter "i" to enable input, "d" to enable debugging, and then 'x' to exit setup and dump into the debugger. You will see the PC (program counter), SP (stack pointer), registers, and such displayed, but you can ignore that.
-* Next you will need to loade the .hex data which is contained in this directory to your clipboard.
+* Next you will need to load the .hex data which is contained in the files found in this directory to your clipboard.
 * I used Tera Term and set the transmit delay to 10 milliseconds per character.
 * You should still be in the monitor, so if you type 'H' you should see the message, "Reading HEX data...".
 * In Tera Term, go Edit and then Paste. This will give you a preview window and the option to click okay and begin the transfer to the Altair clone.
