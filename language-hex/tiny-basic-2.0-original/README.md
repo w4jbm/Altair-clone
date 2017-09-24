@@ -1,4 +1,4 @@
-# PA Tiny Basic
+# PA Tiny BASIC 2.0
 
 These are the original files from:
 
