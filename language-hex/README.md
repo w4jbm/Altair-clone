@@ -71,6 +71,10 @@ http://www.nesssoftware.com/home/mwc/XYBASIC.php
 
 This is a very complete and powerful implementation of BASIC.
 
+## Original Micro-soft BASIC 1.0
+
+This is a copy of the original BASIC written for the Altair by Bill Gates and Paul Allen. Because it represents such an important part of microcomputer history, it is included here for informational and educational purposes only.
+
 ## Credit where credit is due...
 
 Thanks to Mike Douglas at:
@@ -91,13 +95,17 @@ I had a little trouble definatively determining who first wrote VTL, but thanks 
 
 Thanks to Stephen A. Ness, author of XYBASIC, and to Robert Swartz, the current copyright holder who allowed it to be offered as an open source project. Also to Emmanuel Roche, Steven Hirsch, and Udo Munk for bringing it back to life.
 
+Thanks to Bill Gates and Paul Allen for launching the language that a generation of programers grew up with and (for the most part) loved.
+
 And last but not least, to David Hansel for the patches for PA Tiny BASIC 1.0 and to Tom Lake for converting VTL-2 from a ROM to a .hex file.
 
 ## And the fine print...
 
 The copyright for most of the various files are held by others and subject to various terms and conditions. I have tried to recognize those involved and have left any notices or attribution in place with the files used.
 
-To the extent applicable, any original work is:
+These are intended for personal use only. Any material will be removed at the request of the copyright holder or those holding other rights to it.
+
+To the extent applicable, any original work herein is:
 
 Copyright 2017 by James McClanahan and made available under the terms of The MIT License.
 
