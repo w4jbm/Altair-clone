@@ -71,6 +71,8 @@ http://www.nesssoftware.com/home/mwc/XYBASIC.php
 
 This is a very complete and powerful implementation of BASIC.
 
+Copyright (c) 1977-1995 by Robert Swartz. All rights reserved.
+
 ## Original Micro-soft BASIC 1.0
 
 This is a copy of the original BASIC written for the Altair by Bill Gates and Paul Allen. Because it represents such an important part of microcomputer history, it is included here for informational and educational purposes only.
