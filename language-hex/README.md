@@ -8,7 +8,7 @@ These .hex files can be loaded on the Arduino-based Altair clone using the built
 * Hold STOP+AUX1(UP) to enter the setup menu.
 * From the terminal, enter "i" to enable input, "d" to enable debugging, and then 'x' to exit setup and dump into the debugger. You will see the PC (program counter), SP (stack pointer), registers, and such displayed, but you can ignore that.
 * Next you will need to load the .hex data which is contained in the files found in this directory to your clipboard.
-* I used Tera Term and set the transmit delay to 10 milliseconds per character.
+* I used Tera Term and set the transmit delay to 2 milliseconds per character. *Remember that the delay is for communications with the debugger running on the Arduino, not a connection to the emulated Altair. Because of this, shorter delays may work.*
 * You should still be in the monitor, so if you type 'H' you should see the message, "Reading HEX data...".
 * In Tera Term, go Edit and then Paste. This will give you a preview window and the option to click okay and begin the transfer to the Altair clone.
 * You will see the results of each line of hex data as it loads.
@@ -93,7 +93,7 @@ His Arduino-based Altair 8800 kit is affordable and easy to build, making the fu
 
 Thanks to Li-Chen Wang for the original Palo Alto Tiny Basic and the foundation of sharing that he created with his "COPYLEFT" and "ALL WRONGS RESERVED" quips.
 
-I had a little trouble definatively determining who first wrote VTL, but thanks to Frank McCoy and Gary Shannon along with others who have built on it and kept it alive.
+I had a little trouble definatively determining who first wrote VTL, but thanks to Frank McCoy and Gary Shannon along with others who have built on it and kept it alive. I believe this version may have been originally recreated by Emmanuel Roche entering the original code from a hardcopy.
 
 Thanks to Stephen A. Ness, author of XYBASIC, and to Robert Swartz, the current copyright holder who allowed it to be offered as an open source project. Also to Emmanuel Roche, Steven Hirsch, and Udo Munk for bringing it back to life.
 
