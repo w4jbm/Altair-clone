@@ -1,0 +1,1641 @@
+MINOL.WS4
+---------
+
+- "MINOL -- Tiny BASIC with Strings in 1.75K Bytes"
+   Erik T. Mueller
+   DDJ, April 1976, Vol.1, No.4, pp.9-17
+
+(Retyped by Emmanuel ROCHE.)
+
+
+May 1, 1976
+
+Dear Mr. Warren:
+
+        I  have  a Tiny BASIC program running on my MITS Altair  8800  that  I 
+think you might be interested in. I call it MINOL (mine-all). It fits in 1.75K 
+memory. Unlike the other Tiny BASICs, MINOL has a string-handling  capability, 
+but   only  single-byte  integer  arithmetic  and   left-to-right   expression 
+evaluation.
+
+        Additions  to TB include CALL machine-language  subroutines,  multiple 
+statements  on a line (like TBX), and optional "LET" in variable  assignments. 
+Memory locations of the form (H,L) can be used interchangably with  variables, 
+permitting DIM-like operations.
+
+        Sincerely,
+Erik T. Mueller
+
+
+MINOL is an abbreviated form of BASIC with additional features. It has  twelve 
+statements: LET, PR, IN, GOTO, IF, CALL, END, NEW, RUN, CLEAR, LIST, and OS.
+
+Variables: A letter from A to Z, or a memory location of the form (H,L), where 
+H  is  the high address (decimal), and L is the low address. H and  L  may  be 
+expressions.
+
+Number: An integer from 0 to 255.
+
+Expression: A series of terms separated by arithmetic operators.
+
+Terms: Numbers, variables, schars, random.
+
+Schar: A single character enclosed in single quotes. Gives the ASCII value  of 
+the character.
+
+Random:  "!"  (exclamation  point) gives a random number between  0  and  255. 
+(Subroutine by Jim Parker.)
+
+Arithmetic Operators: + - * /
+
+Relational Operators (not permitted in expressions): = # < ("less than")
+
+Arithmetic  Evaluation: All expressions are evaluated from left to  right  (no 
+precedence of operations).
+
+Statements: A statement consists of one or more substatements separated by ":" 
+(colon), and terminated by CR. Lines up to 72 characters. Line numbers from  1 
+to  254. All statements may be used with or without a line number.  Statements 
+without  a line number are executed immediately. Statements with line  numbers 
+are edited into the existing program.
+
+
+Substatements
+-------------
+
+[LET | x] <var> = <expr>
+
+Assigns the value of a variable. The "LET" can be left out if desired.
+
+Ex: LET S = 0
+    LET (24,0) = P-59
+    A=B+C*J-198
+    (25,5)=A*7/B
+
+
+PR <var-list> [; | x]
+
+<var-list> : Literals, strings, or expressions separated by commas.
+
+Literal: Characters to be printed enclosed in double quotes.
+
+Strings:  $(H,L): A series of memory locations starting at H,L  which  contain 
+characters previously entered.
+
+Expressions: Simple variable or expression:
+
+Ex: PR"YOU SAY YOUR NAME IS",$(10,0)
+    PRA,B,(6,0),
+    PR 56+!/A,B
+    PR
+
+A semicolon at the end of a PR suppresses CRLF. A blank PR produces a CRLF.
+
+PR  Format: Numerical values are printed with one leading and trailing  space, 
+and  with all leading zeros suppressed. All strings and literals  are  printed 
+without leading and trailing spaces. No zone spacing.
+
+
+GOTO <expr>
+
+Transfers  control  to the specified statement. GOTO 0  transfers  control  to 
+beginning of unnumbered statement.
+
+Ex: GOTO A*10
+    GOTO 78
+
+
+IF <expr> <relop> <expr>;<statement>
+
+Executes  the  statement  following  the ";"  (semi-colon)  if  the  specified 
+relation  is  true.  If  it is untrue, control  is  transferred  to  the  next 
+statement on the line (if present).
+
+Ex: IF X=5; GOTO 20
+    IF A='Y' ;PR "SURE, WHY NOT?"
+    IF A+B*C # !;GOTO 20 : PRA+B*C
+    IF Y # 6; S=!
+
+
+IN [<var>|<str>] [,[<var>|<str>]]*
+
+This  statement permits two types of data to be entered from the terminal:  a) 
+Numeric data; and b) Alphanumeric data; either a single letter, or a string of 
+n characters.
+
+Using  a  <var>:  The input data is tested. If it is numeric,  the  number  is 
+deposited  into the variable. If the data is not a number, the ASCII value  of 
+the first character typed is deposited.
+
+Using  a  <str>: (of the form $(H, L)) The inputted characters  are  deposited 
+into  memory  sequentially starting at location H,L. 255 is placed  in  memory 
+after  the  last character before CR. All spaces inputted are  ignored  unless 
+enclosed  by quotes. Note that (H,L) refers to a single location,  but  $(H,L) 
+refers  to  a  series  of locations beginning at H,L. (H,L)  can  be  used  in 
+expressions as a variable, but $(H,L) can only be used in I/O statements  (IN, 
+PR).
+
+
+CALL (H,L): Calls user's subroutine starting at location H,L decimal.
+
+END: Terminates program.
+
+NEW: Deletes all lines of a program.
+
+CLEAR: Sets all variables (A-Z) equal to zero.
+
+RUN: Starts execution of program at lowest numbered statement.
+
+LIST: Lists program in memory.
+
+OS: Transfers control to user's operating system.
+
+
+Line editing and correction
+---------------------------
+
+- Typing Ctrl-S deletes the last character typed.
+- Ctrl-L deletes an entire line.
+- Ctrl-C stops executing program.
+  Prints:  BREAK  AT  LL (LL is the line that was to be  executed  before  the 
+interrupt occurred.)
+- To delete a line, type the line number followed by CR.
+-  To change a line, type in the line with changes. The new line will  replace 
+the old one.
+
+
+ERROR MESSAGES  (!ERR L AT XX)
+--------------
+
+1. Label does not exist.
+2. Input is over 72 characters.
+3. Unrecognizable statement type.
+4. Illegal variable.
+5. Syntax error.
+6. Out of memory.
+7. Delete by zero.
+
+
+MINOL 2.1 SYNTAX -- April 1976
+----------------
+
+<line>         ::= <number><statement> CR |<statement> CR
+<statement>    ::= <substatement>* : <substatement>
+<substatement> ::= [LET|x] <var> = <expr>
+                   PR <expr-list> [;|x]
+                   IN <var-str-list>
+                   IF <expr><relop><expr> ; <statement>
+                   GOTO <expr>
+                   CALL <memloc>
+                   END
+                   RUN
+                   LIST
+                   NEW
+                   CLEAR
+                   OS
+<number>       ::= <digit>*2 <digit>
+<digit>        ::= 0|1|..|8|9
+<var>          ::= A|B|..|Y|Z|<memloc>
+<relop>        ::= #|=|<
+<expr-list>    ::= [<literal>|<expr>|<str>][,[<literal>|
+                   <expr>|<str>]]*
+<var-str-list> ::= [<var>|<str>][;[<var>|<str>]]*
+<expr>         ::= [<term><aroper>]* <term>
+<term>         ::= <var>|<number>|'<schar>'|!
+<literal>      ::= "<char>*"
+<schar>        ::= <char>
+<str>          ::= $<memloc>
+<memloc>       ::= (<highadr>,<lowadr>)
+<highadr>      ::= <number>
+<lowadr>       ::= <number>
+<char>         ::= any character except " and CR
+
+Notes: < > encloses an element of MINOL
+       x is the empty set
+       * repeat limited by length of line
+       *2 repeat from 0 to 2 times
+
+
+MINOL Memory Allocation  (All locations are split octal.)
+-----------------------
+
+(ROCHE> Split octal... Ho, boy! It must have been 20 years since I last played 
+with  "crazy octal"... Anyway, I have added a column, to the right,  with  the 
+address(es) in hexadecimal, in case you started programming after 1972...)
+
+000 000 - 000 115  I/O Routines, etc.                           0000H - 004DH
+
+     System Reset: 000 000  061 LXI SP                          LXI SP, 0FFFH
+                       001  377                                   (RAM: 4KB)
+                       002  017
+                       003  317 RST CRLF                        RST crlf
+                       004  303 JMP MINOL                       JMP 004EH
+                       005  116
+                       006  000
+
+     CRLF:             010  A subroutine to output a            0008H
+                            CR followed by a LF.
+
+     INPUT:            020  Moves a character from              0010H
+                            input device to the A reg-
+                            ister. Parity equals 1.
+                            Must output an echo
+                            check of the inputted
+                            character.
+
+     OUTPUT:           040  Outputs character in the            0020H
+                            A register. Parity equals 1.
+                            No registers may be
+                            altered.
+                            Must CALL INT    315                CALL 02F8H
+                                             363
+                                             002
+                            This checks for keyboard
+                            interrupt (^C).
+
+000 116 - 006 377  MINOL Interpreter                            004EH - 06FFH
+
+     000 253 L   Highest memory location available              00ABH
+         261 H     for MINOL programs ("MEMEND").               00B1H
+
+     001 141 L   Address of user's Operating System,            0161H
+         142 H     or monitor ("OS").                           0162H
+
+     All input text is stored at 006 225 - 006 335              0695H - 06DDH
+     Free space is left for short strings at 006 336 - 006 377  06DEH - 06FFH
+     Variables (A-Z) are stored at 005 027 - 005 062            0517H - 0532H
+
+007 000 +          Program storage                              0700H+
+
+
+Executing MINOL
+---------------
+
+To  start MINOL and initialize program area, EXAMINE 002 350 (XRET at  02E8H), 
+RUN.
+
+To start without initialization, EXAMINE 000 000 (system reset at 0000H), RUN.
+
+
+May 24, 1976
+
+Dear Jim:
+
+        I am enclosing the listing of MINOL -- manually typed!
+
+        There are several features of my program, both positive and  negative, 
+that I might point out.
+
+        On  the  plus  side, MINOL uses only 1.75K of  memory,  including  the 
+Input/Output subroutines (although, since writing it, I see how I can make  it 
+even  smaller.)  Memory locations of the form (H,L) can be used  similarly  to 
+one- or two-dimensional DIMs in higher BASIC's. Simple input or output strings 
+are possible by specifying a series of memory locations -- of the form $(H,L), 
+where  H,L  is the first location where characters are to be deposited.  I  am 
+enclosing three programs to illustrate these features.
+        
+        On  the  negative  side, the program is not  designed  for  arithmetic 
+functions,  having no grouping of operations, and being limited to a value  of 
+255.  The  relational  operators are restricted to =, #,  and  <,  although  > 
+("greater than") can be done by reversing the logical expressions. Fewer error 
+messages  are  provided  than usual. MINOL is written  completely  in  machine 
+language,  without using IL. (ROCHE> The "interpreted language" (IL) in  which 
+Tiny BASIC was designed.)
+
+        When I can supply MINOL on a cassette, I will let you know.
+
+        Yours truly,
+Erik T. Mueller
+
+
+Additions/changes since the May 1st letter
+------------------------------------------
+
+Spaces are ignored:
+a. During line/statement entry unless enclosed by quotes.
+b. When inputting variables.
+c. When inputting strings if the L address is non-zero. 
+
+Spaces are accepted:
+a. When inputting strings if the L address is non-zero.
+b. When enclosed by quotes. 
+
+Instead  of GOSUB/RET statements, use the following substitute  statements  to 
+perform the same function:
+
+1) First initialize the GOSUB stack pointer Y,Z:
+   2 Y=14:Z=255 (Y and Z are the H,L address of some free space in memory.) 
+   (ROCHE> In this case, 0EFFH.)
+
+2) Instead of a GOSUB statement, substitute the following:
+   LET(Y,Z)=<Return label>:Z=Z-1:GOTO<subroutine label>
+
+3) Instead of a RET, substitute: Z=Z+1:GOTO(Y,Z)
+   Free  space is left for very short user's strings from 006 366 to  006  377 
+(ROCHE>  06F6H  to 06FFH, but the listing below, being shorter  than  the  one 
+originally published by DDJ in 1976, allows from 06DEH to 06FFH. Conversion to 
+split octal is left to you as an exercise...).  
+
+(On  a  directly-executed IN statement, although the data  will  be  correctly 
+stored, an error message may appear after its execution.)
+
+The  monitor  gives a "]" as a prompt. The IN statement gives a "?"  unless  a 
+sense switch is up.
+
+
+Three programs in MINOL
+-----------------------
+
+]LIST
+10 PR"GIVE ME A SENTENCE":IN$(14,1)
+20 PR"STRING TO SEARCH FOR?":IN$(14,101)
+21 A=0
+22 A=A+1:IF(14,A)#255;GOTO22
+23 B=0
+24 B=B+1:IF(14,100+B)#255;GOTO24
+30 C=1:D=1:S=0
+40 IF(14,D+100)#(14,C);GOTO70
+50 D=D+1:C=C+1:IFD<B;GOTO40
+60 LETS=S+1
+65 C=C-1
+70 LETD=1
+80 C=C+1:IFC<A;GOTO40
+90 PR"'";$(14,101);"' OCCURS";S;
+96 IFS=1;GOTO100
+97 PR"TIMES IN '";$(14,1);"'":END
+100 PR"TIME IN '";$(14,1);"'":END
+
+]RUN
+GIVE ME A SENTENCE
+? THE BLUE BIRD IN THE BLUE SKY
+STRING TO SEARCH FOR?
+? BLUE
+'BLUE' OCCURS 2 TIMES IN 'THE BLUE BIRD IN THE BLUE SKY'
+
+
+]LIST
+10 "***NUMBER-A NUMBER GUESSING GAME (NUM05)"
+20 PR:PR"WHAT IS YOUR NAME";:IN$(14,1)
+30 X=!:S=0:PR"HI,";$(14,1);". WELCOME TO THE GAME OF NUMBER"
+40 PR"I'M THINKING OF A NUMBER FROM 0 TO 255"
+50 PR"GUESS MY NUMBER!!"
+60 PR:PR"YOUR GUESS";:ING:S=S+1
+65 IFG=X;GOTO90
+70 IFG<X;PR"TOO SMALL. TRY A BIGGER NUMBER."
+80 IFX<G;PR"TOO BIG. TRY A SMALLER NUMBER."
+85 GOTO60
+90 PR"THAT'S RIGHT,";$(14,1);"!! YOU GOT IT IN";S;"GUESSES"
+100 PR"PLAY AGAIN";:INA:IFA='Y';GOTO30
+110 PR"OK.....HOPE YOU HAD FUN.":END
+
+
+]LIST
+10 PR"NAME";:IN$(14,1)
+20 IF(14,1)='J';IF(14,2)='I';IF(14,3)='M';PR"IT'S JIM!"
+30 IF(14,1)#'J';PR"IT'S NOT JIM.":GOTO10
+
+]RUN
+NAME?ERIK
+IT'S NOT JIM.
+NAME?JIM
+IT'S JIM!
+NAME?^C
+BREAK AT 10
+]
+
+
+Listing of MINOL 2.1
+--------------------
+
+; MINOL22.ASM
+; -----------
+;
+; MINOL 2.1  Erik T. Mueller  May 1976
+;
+; (ASM/MAC port by Emmanuel ROCHE.)
+;
+;--------------------------------
+; MITS Altair 8800 hardware specifics.
+;
+mout    EQU     2               ; Output bit
+constat EQU     16              ; MITS 2SIO board at I/O port 16
+condata EQU     17              ; Data of above
+senseS  EQU     255             ; MITS "Sense Switch" port
+monitor EQU     8800H           ; MITS Monitor
+;
+;--------------------------------
+; ASCII characters used.
+;
+CtrlC   EQU     03H             ; Control-C
+lf      EQU     0AH             ; Line Feed
+CtrlL   EQU     0CH             ; Control-L
+cr      EQU     0DH             ; Carriage Return
+CtrlS   EQU     13H             ; Control-S
+space   EQU     20H             ; ( )
+Emark   EQU     21H             ; (Exclamation mark) (MAC don't like it)
+Dquote  EQU     22H             ; (")
+number  EQU     23H             ; (#)
+dollar  EQU     24H             ; ($)
+Squote  EQU     27H             ; (')
+Lparen  EQU     28H             ; Left  parenthesis
+Rparen  EQU     29H             ; Right parenthesis
+multip  EQU     2AH             ; (*)
+plus    EQU     2BH             ; (+)
+comma   EQU     2CH             ; (,)
+minus   EQU     2DH             ; (-)
+divide  EQU     2FH             ; (/)
+zero    EQU     30H             ; (0)
+nine    EQU     39H             ; (9)
+colon   EQU     3AH             ; (:)
+semico  EQU     3BH             ; (;)
+lesst   EQU     3CH             ; (<)
+equal   EQU     3DH             ; (=)
+Qmark   EQU     3FH             ; (?)
+upA     EQU     41H             ; (A)
+upC     EQU     43H             ; (C)
+upE     EQU     45H             ; (E)
+upF     EQU     46H             ; (F)
+upG     EQU     47H             ; (G)
+upI     EQU     49H             ; (I)
+upL     EQU     4CH             ; (L)
+upN     EQU     4EH             ; (N)
+upO     EQU     4FH             ; (O)
+upP     EQU     50H             ; (P)
+upR     EQU     52H             ; (R)
+upZ     EQU     5AH             ; (Z)
+Bslash  EQU     5CH             ; (\)
+underl  EQU     5FH             ; (_)
+;
+;--------------------------------
+; Intel 8080 RST subroutines used.
+;--------------------------------
+reset   EQU     0               ; RST 0 at 0000H
+;
+; System reset. (ROCHE> A better name would be "Warm Start"...)
+;
+        LXI     SP,MemEnd
+        RST     crlf
+        JMP     MINOL
+        DS      1
+;
+crlf    EQU     1               ; RST 1 at 0008H
+;
+; Outputs a CR, followed by a LF.
+;
+        JMP     docrlf          ; Does not fit in 8 bytes, so jump
+        DS      5
+;
+input   EQU     2               ; RST 2 at 0010H
+;
+; Moves a character from input device to the A-reg.
+; Parity equals 1. Must output an echo check of the inputted character.
+;
+conin:  IN      constat         ; Get console status
+        RRC                     ; Bit0 into Carry
+        JNC     conin           ; Jump back if no character available
+        IN      condata         ; Read character
+        ANI     0111$1111B      ; Make sure it is an ASCII character
+        JP      conout          ; Echo input
+        DS      3
+;
+output  EQU     4               ; RST 4 at 0020H
+;
+; Parity equals 1. No register may be altered.
+; Must CALL int. This checks for keyboard interrupt (Ctrl-C).
+;
+        CALL    int             ; Check for keyboard interrupt
+        CPI     255             ; Check for end of string
+        RZ                      ; Do not print
+conout: PUSH    PSW             ; Save character
+conout2:IN      constat         ; Get console status
+        ANI     mout            ; Mask output bit
+        JZ      conout2         ; Jump back if not ready for output
+        POP     PSW             ; Restore character
+        OUT     condata         ; Output character
+        RET
+;
+; Continue RST 1 here.
+;
+docrlf: PUSH    PSW
+        MVI     A,cr
+        CALL    conout          ; Print CR
+        MVI     A,lf
+        CALL    conout          ; Print LF
+        POP     PSW
+        RET
+;
+;--------------------------------
+        ORG     004EH           ; MITS Altair 8800 (with 4KB of RAM)
+;--------------------------------
+; Start of MINOL interpreter.
+;
+MINOL:  MVI     A,']'           ; Output prompt
+        RST     output
+        CALL    InpTxt          ; Get input line
+        LXI     H,txt           ; Point to input text with hl
+        MOV     A,M
+        CALL    chekn           ; Check for label
+        JNC     direct          ; If no label, go execute command
+fnd:    INX     H               ; Point to first non-numeric char
+        MOV     A,M
+        CALL    chekn
+        JC      fnd
+        CALL    mkbin           ; Convert ASCII label to binary
+;
+; This section edits lines of the program.
+;
+        LXI     D,prog
+zip:    LDAX    D
+        CPI     cr
+        INX     D
+        JNZ     zip
+        LDAX    D               ; Look at line number
+        CPI     255
+        JZ      insrt
+        STC
+        CMC
+        CMP     B
+        JC      zip
+;
+; Point to line number greater than or equal to entered label.
+;
+insrt:  MOV     A,M
+        CPI     cr
+        JZ      ekil            ; If label alone, delete line
+        MVI     C,2
+ihr:    INX     H               ; Count length of line and add 2
+        MOV     A,M
+        INR     C
+        CPI     cr
+        JNZ     ihr
+;
+; If line entered already exists, first
+; delete the old one, then insert the new one.
+;
+        LDAX    D
+        CMP     B
+        JNZ     ibyh
+        PUSH    D
+        CALL    killine         ; Delete old line
+        POP     D
+;
+; HL points to first location where the new line will be placed.
+;
+ibyh:   MOV     H,D
+        MOV     L,E
+        PUSH    D               ; Save position in stack
+        DCX     D
+ehr:    INX     D
+        LDAX    D
+        CPI     255
+        JNZ     ehr             ; Continue until DE points to end of file
+        MOV     A,C             ; Length of new line in A
+        MOV     B,D
+        MOV     C,E
+hby:    INX     D
+        INX     H
+        PUSH    PSW
+        MOV     A,E
+        CPI     LOW MemEnd      ; Limit of program memory
+        JNZ     hii
+        MOV     A,D
+        CPI     HIGH MemEnd     ; Memory limit
+        JZ      err6            ; "Out of memory"
+hii:    POP     PSW
+        DCR     A
+        JNZ     hby
+;
+; Increment until DE points to new End-Of-File position,
+; and HL points to where file updating begins.
+; BC points to End-Of-File.
+;
+updt:   LDAX    B
+        STAX    D
+        MOV     A,E
+        CMP     L
+        JNZ     nhr
+        MOV     A,D
+        CMP     H
+        JZ      net
+nhr:    DCX     B
+        DCX     D
+        JMP     updt            ; Relocate file, leaving space for new line
+;
+net:    POP     D               ; Retrieve pointer
+        LXI     H,txt
+ifd:    INX     H
+        MOV     A,M
+        CALL    chekn
+        JC      ifd             ; Point to first non-numeric character
+        ldA     bin             ; Put line number in A
+        STAX    D               ; Store line number in file
+ntat:   INX     D               ; Store line text in file
+        MOV     A,M
+        STAX    D
+        INX     H
+        CPI     cr
+        JNZ     ntat
+        RST     reset           ; Warm starts MINOL
+;
+;--------------------------------
+; Delete a line, and go back to interpreter.
+;
+ekil:   CALL    killine         ; Delete line
+        RST     reset           ; Warm starts MINOL
+;
+;--------------------------------
+; Delete a line.
+;
+killine:
+        LDAX D
+        CMP     B
+        RNZ                     ; If deleting a line that does not exist, return
+        MOV     H,D
+        MOV     L,E
+bbl:    INX     H
+        MOV     A,M
+        CPI     cr
+        JNZ     bbl             ; Point to next line
+ark:    INX     H               ; Relocate file, deleting line
+        MOV     A,M
+        STAX    D
+        CPI     255
+        RZ
+        INX     D
+        JMP     ark
+;
+;--------------------------------
+; Direct execution of a statement.
+;
+direct: RST     crlf            ; Start a new line
+        XRA     A
+        STA     lne             ; Set LNE (current line no.) = 0
+        JMP     exec            ; Execute statement
+;
+;--------------------------------
+; RUN statement executor.
+;
+run:    LXI     H,prog          ; Start from beginning of program
+lpub:   MOV     A,M             ; Get next statement
+        CPI     colon
+        INX     H
+        JZ      exec            ; If not a new line, go execute statement
+        CPI     cr
+        JNZ     lpub
+;
+; If statement number = 255 (end of program), warm starts MINOL.
+;
+bib:    MOV     A,M
+        CPI     255
+        JZ      reset           ; Warm starts MINOL
+;
+; If not 255, store current line number at LNE.
+;
+        STA     lne
+        INX     H
+exec:   CALL    int             ; Check for keyboard program interrupt
+        INX     H
+        MOV     A,M
+        CPI     equal           ; Check for = in second column (assignment)
+        JZ      xlet
+        DCX     H
+        MOV     A,M
+        CPI     Lparen          ; If ( in first column (memory
+        JZ      xlet            ;    location assignment), go to LET
+        CPI     upC             ; Check for 'C'
+        JNZ     gsm             ; If not, go on
+;
+; CALL or CLEAR ?
+;
+        INX     H               ; Point to following char
+        MOV     A,M
+        CPI     upA
+        JZ      xcall           ; CALL statement
+        CPI     upL
+        JZ      clr             ; CLEAR statement
+        JMP     err3            ; If neither, report error
+;
+gsm:    CPI     upE             ; Check for 'E' as in END
+        JZ      reset           ; Warm starts MINOL
+        CPI     upG
+        JZ      goto            ; GOTO statement
+        CPI     Dquote          ; Check for " indicating REM statement
+        JZ      lpub
+        CPI     upN
+        JZ      new             ; NEW statement
+        CPI     upP
+        JZ      pr              ; PR statement
+        CPI     upO
+        JZ      monitor         ; Address of MITS Monitor
+        CPI     upR
+        JZ      run             ; RUN statement
+        CPI     upI
+        JNZ     ls
+;
+; IN or IF ?
+;
+        INX     H               ; Point to following char
+        MOV     A,M
+        CPI     upN
+        JZ      xin             ; IN statement
+        CPI     upF
+        JZ      xif             ; IF statement
+        JMP     err3            ; If neither, report error
+;
+ls:     CPI     upL
+        JNZ     err3
+;
+; LET or LIST ?
+;
+        INX     H               ; Point to following char
+        MOV     A,M
+        CPI     upE
+        JZ      xlet            ; LET statement
+        CPI     upI
+        JZ      list            ; LIST statement
+        JMP     err3            ; If neither, report error
+;
+;--------------------------------
+; LET statement executor.
+;
+xlet:   MOV     A,M
+        CALL    term            ; Find '='
+        JC      err5            ; Report error if no '=' before CR or ':'
+        CPI     equal
+        INX     H
+        JNZ     xlet
+;
+; Transfer expression text in program text to expression buffer.
+;
+        LXI     D,expr
+mrenx:  MOV     A,M
+        STAX    D
+        CALL    term
+        INX     H
+        INX     D
+        JNC     mrenx
+        CALL    exprs
+serch:  MOV     A,M             ; Go back before '='
+        CPI     equal
+        DCX     H
+        JNZ     serch
+        MOV     A,M
+        CALL    chekltr
+        JNC     inlet           ; If not variable, get memory address
+        CALL    getadr
+        MOV     A,C
+        STAX    D               ; Store in variable
+        JMP     lpub            ; Next statement
+;
+inlet:  CPI     Rparen
+        JNZ     err4
+jhr:    DCX     H
+        MOV     A,M
+        CPI     Lparen
+        JNZ     jhr
+        MOV     A,C
+        PUSH    PSW
+        CALL    val             ; Get memory location in BC
+        POP     PSW
+        STAX    B
+        JMP     lpub
+;
+;--------------------------------
+; PR statement executor.
+;
+pr:     INX     H               ; Skip "P"
+        INX     H               ; Skip "R"
+        MOV     A,M
+        CALL    term            ; If blank print, go to CR
+        JC      xdcr
+nxte:   CPI     Dquote          ; Check for literal
+        JNZ     var             ; If not, go on
+;
+; Yes: Print text until (") found.
+;
+hr:     INX     H
+        MOV     A,M
+        CPI     Dquote
+        JZ      mreno
+        CALL    term            ; If terminator before closing quote, error
+        JC      err5
+        RST     output
+        JMP     hr
+;
+mreno:  INX     H
+        MOV     A,M
+        CALL    term            ; If end of statement without semicolon, do CR
+        JC      xdcr
+        CPI     semico
+        JNZ     err5
+        INX     H
+        MOV     A,M
+        CALL    term            ; If term after semicolon, do not print CR
+        JC      ncr
+        JMP     nxte            ; Get next thing to print
+;
+xdcr:   RST     crlf            ; Start a new line
+ncr:    JMP     lpub
+;
+var:    CPI     dollar
+        JZ      str             ; Check if string
+        LXI     D,expr
+        MVI     A,space         ; Output leading space
+        RST     output
+er:     MOV     A,M             ; Transfer expression text from program text
+        STAX    D               ;   to expression buffer.
+        INX     H
+        INX     D
+        CALL    term
+        JC      hrx
+        CPI     semico
+        JNZ     er
+hrx:    DCX     H
+        DCX     D
+        MVI     A,cr
+        STAX    D
+        CALL    exprs
+        MOV     B,C
+        CALL    pbinbcd         ; Print expression's value
+        MVI     A,space
+        RST     output
+        JMP     mreno+1
+;
+str:    INX     H
+        CALL    val             ; Get start address of string in BC and print it
+mre:    LDAX    B
+        RST     output
+        CPI     255
+        INX     B
+        JNZ     mre
+        INX     H
+        JMP     mreno+1
+;
+xin:    INX     H               ; Input statement
+;
+; MITS Altair 8800 hardware specific.
+;
+        IN      senseS
+        CPI     0               ; If sense switches down, print '? '
+        JNZ     eahr
+        MVI     A,Qmark
+        RST     output
+        MVI     A,space
+        RST     output
+;
+eahr:   MOV     A,M
+        CALL    chekltr         ; Check for variable
+        JC      lvb
+        CPI     dollar          ; Check for input string
+        JZ      strin
+        CPI     Lparen          ; Check for single memory location
+        JNZ     err4
+        CALL    valde           ; Get location in DE
+        PUSH    H
+        JMP     hs
+;
+lvb:    PUSH    H
+        CALL    getadr          ; Get address of letter variable
+hs:     PUSH    D
+        CALL    InpTxt          ; Input a line
+        RST     crlf            ; Start a new line
+        LXI     H,txt
+        MOV     A,M
+        CALL    chekn           ; Check for a number
+        JNC     letr
+fd:     INX     H
+        MOV     A,M
+        CALL    chekn
+        JC      fd              ; Point to first non-numeric char
+        PUSH    B
+        CALL    mkbin           ; Convert ASCII input data to binary
+        POP     B
+letr:   POP     D
+        STAX    D               ; Put A in variable
+chk:    POP     H
+        INX     H
+        MOV     A,M
+        CPI     comma           ; Check for more input variables
+        JZ      xin
+        CALL    term
+        JC      lpub
+        JMP     err5
+;
+strin:  INX     H               ; Input string
+        CALL    val             ; Get first memory location in BC
+        PUSH    H
+        PUSH    B
+        CALL    InpXT           ; Input a line
+        POP     B
+        RST     crlf            ; Start a new line
+        LXI     H,txt
+ld:     MOV     A,M             ; Store text beginning at specified location
+        CPI     cr
+        JZ      te
+        STAX    B
+        INX     B
+        INX     H
+        JMP     ld
+;
+te:     MVI     A,255           ; Store 255 at end of string
+        STAX    B
+        JMP     chk
+;
+; CLEAR statement executor.
+;
+clr:    LXI     D,VarStor       ; Clear executor var storage
+lcr:    XRA     A
+        STAX    D
+        INX     D
+        MOV     A,E
+        CPI     LOW VarEnd      ; Last variable location
+        JNZ     lcr
+        JMP     lpub
+;
+; CALL statement executor.
+;
+xcall:  INX     H               ; Skip "A"
+        INX     H               ; Skip "L"
+        INX     H               ; Skip "L"
+        CALL    val             ; Get address in BC
+        PUSH    H
+        PUSH    D
+        LXI     D,xret          ; Load DE with return address
+        PUSH    D               ; Push return address into stack
+        MOV     H,B
+        MOV     L,C
+        PCHL                    ; Jump to user's subroutine
+;
+xret:   POP     D
+        POP     H
+        JMP     lpub
+;
+;--------------------------------
+; NEW processor.
+;
+new:    LXI     D,prog
+        MVI     A,cr            ; Initialize program area
+        STAX    D
+        INX     D
+        MVI     A,255
+        STAX    D
+        RST     reset           ; Warm starts MINOL
+;
+;--------------------------------
+; This routine checks for Control-C from keyboard.
+;
+int:    PUSH    PSW
+        IN      constat         ; <-- MITS hardware specific...
+        CPI     CtrlC
+        JZ      break
+        POP     PSW
+        RET
+;
+; Yes: User typed a Control-C. Acknowledge it.
+;
+break:  RST     input
+        POP     D
+        POP     D
+        POP     D
+        POP     D
+        RST     crlf            ; Start a new line
+        LXI     D,BrkMsg        ; "BREAK"
+        CALL    PrnTxt
+        JMP     atx
+;
+;--------------------------------
+; GOTO statement executor.
+;
+goto:   INX     D
+        INX     H               ; Skip "G"
+        INX     H               ; Skip "O"
+        INX     H               ; Skip "T"
+        INX     H               ; Skip "O"
+        LXI     D,expr          ; Calculate value of expression
+rme:    MOV     A,M
+        STAX    D
+        CALL    term
+        INX     H
+        INX     D
+        JNC     rme
+        CALL    exprs
+        MOV     B,C
+        MOV     A,C
+        CPI     0
+        JNZ     jump
+        LXI     H,txt
+        JMP     direct
+;
+; goto expression.
+;
+jump:   LXI     H,prog
+dup:    MOV     A,M
+        CPI     cr
+        INX     H
+        JNZ     dup
+        MOV     A,M
+        CPI     255
+        JZ      err1
+        CMP     B
+        JNZ     dup
+        JMP     bib
+;
+;--------------------------------
+; Error & Break texts.
+;
+ErrMsg: DB      '!ERR ', 255
+at:     DB      ' AT ',  255
+BrkMsg: DB      'BREAK', 255
+;
+; Data storage.
+;
+bin:    DB      0
+lne:    DW      0               ; Current line number
+;
+;--------------------------------
+;
+act:    PUSH    B               ; Gets the value of a memory location
+        XCHG
+        CALL    val             ; Part of the exprs subroutine to follow
+        XCHG
+        LDAX    B
+        POP     B
+        MOV     B,A
+nxgt:   INX     D
+        JMP     getnet
+;
+noteq:  MOV     A,E             ; If two expressions are not equal,
+        CMP     C               ;   execute statement (part of IF
+        JNZ     exec            ;   statement executor to follow).
+        JMP     lpub
+;
+valde:  CALL    val
+        MOV     D,B
+        MOV     E,C
+        RET
+;
+exprs:  PUSH    H               ; Calculates the value of an expression
+        LXI     D,expr-1        ;   stored in memory
+        MVI     C,0             ; DE is the cursor
+retpt:  LDAX    D
+        CALL    term            ; Check for end of expression
+        JNC     gomor
+        POP     H
+        RET
+;
+gomor:  PUSH    PSW             ; Save operation in stack
+        INX     D               ; Get term/factor
+        LDAX    D
+        CPI     Squote          ; Single character value
+        JZ      asc
+        CPI     Lparen          ; Memory location
+        JZ      act
+        CPI     Emark           ; Random number
+        JZ      rnd
+        CALL    chekn
+        JC      constant        ; Constant (number)
+        CALL    chekltr
+        JNC     err5
+        INX     D
+        PUSH    D               ; Variable
+        CALL    getadr
+        LDAX    D
+        MOV     B,A
+        POP     D
+getnet: POP     PSW             ; Retrieve operation
+        CPI     plus
+        JZ      xadd
+        CPI     minus
+        JZ      xsub
+        CPI     multip
+        JZ      mult
+        CPI     divide
+        JZ      div
+        JMP     err5
+;
+;--------------------------------
+; Add C=C+B.
+;
+xadd:   MOV     A,C
+        ADD     B
+        MOV     C,A
+        JMP     retpt
+;
+;--------------------------------
+; Subtract C=C-B.
+;
+xsub:   MOV     A,C
+        SUB     B
+        MOV     C,A
+        JMP     retpt
+;
+;--------------------------------
+; Multiply C=C*B.
+;
+mult:   MOV     A,C
+        DCR     B
+gbk:    ADD     C
+        DCR     B
+        JNZ     gbk
+        MOV     C,A
+        JMP     retpt
+;
+;--------------------------------
+; Check if division by zero.
+;
+div0:   MOV     A,B
+        ORA     A
+        MOV     A,C
+        MVI     C,0
+        RNZ
+        MVI     B,'7'
+        JMP     err
+;
+;--------------------------------
+; Divide C=C/B.
+;
+div:    CALL    div0
+        MOV     A,C
+        MVI     C,0
+ctue:   INR     C       
+        SUB     B
+        JZ      zer
+        JC      min
+        JMP     ctue
+;
+min:    DCR     C
+zer:    JMP     retpt
+;
+;--------------------------------
+;
+constant:
+        INX D
+        LDAX    D
+        CALL    chekn
+        JC      constant
+        XCHG
+        CALL    sure
+        XCHG
+        MOV     B,A
+        JMP     getnet
+;
+;--------------------------------
+;
+asc:    INX     D
+        LDAX    D
+        MOV     B,A
+        INX     D
+        JMP     nxgt
+;
+;--------------------------------
+; Random number generator by Jim Parker.
+;
+rnd:    LXI     H,sh+3
+        MVI     B,8
+        MOV     A,M
+rtop:   RLC
+        RLC
+        RLC
+        XRA     M
+        RAL
+        RAL
+        DCR     L
+        DCR     L
+        DCR     L
+        MOV     A,M
+        RAL
+        MOV     M,A
+        INR     L
+        MOV     A,M
+        RAL
+        MOV     M,A
+        INR     L
+        MOV     A,M
+        RAL     
+        MOV     M,A
+        INR     L
+        MOV     A,M
+        RAL
+        MOV     M,A
+        INR     B
+        JNZ     rtop
+        MOV     B,A
+        JMP     nxgt
+;
+;--------------------------------
+sh:     DB      11H, 99H, 5AH, 0E9H     ; Seed
+;--------------------------------
+; Input a line of 72 characters.
+;
+InpTxt: MVI     C,0
+InpXT:  LXI     H,txt-1
+ino:    RST     input
+        MOV     B,A
+        MOV     A,C
+        CPI     0
+        MOV     A,B
+        JNZ     mid
+        CPI     space
+        JZ      ino             ; Do not accept space if outside quotes
+mid:    CPI     Dquote
+        JNZ     goon
+        MOV     A,C
+        CPI     0
+        JZ      mrf
+        MVI     C,0
+        JMP     goon
+;
+mrf:    MVI     C,3
+goon:   CPI     CtrlL           ; If Control-L, redo line
+        JNZ     hrD
+        MVI     A,Bslash
+        RST     output
+        RST     crlf            ; Start a new line
+        JMP     InpTxt
+;
+hrD:    CPI     cr
+        JNZ     chm
+        JMP     help
+;
+chm:    CPI     CtrlS           ; If Control-S, go back a character
+        JNZ     ctn
+        MVI     A,underl
+        RST     output
+        DCX     H
+        JMP     ino
+;
+ctn:    MOV     A,L
+        CPI     LOW TxtEnd
+        JZ      err2            ; If over 72 characters, report error
+        INX     H
+        MOV     M,B
+        JMP     ino
+;
+;--------------------------------
+; ERR y AT xx
+;
+err1:   MVI     B,'1'
+        JMP     err
+;
+err2:   MVI     B,'2'
+        JMP     err
+;
+err3:   MVI     B,'3'
+        JMP     err
+;
+err4:   MVI     B,'4'
+        JMP     err
+;
+err5:   MVI     B,'5'
+        JMP     err
+;
+err6:   MVI     B,'6'
+err:    RST     crlf            ; Start a new line
+        LXI     D,ErrMsg
+        CALL    PrnTxt          ; Print "ERR" message
+        MOV     A,B
+        RST     output          ; Print the error number
+atx:    LXI     D,at            ; " AT "
+        CALL    PrnTxt
+        ldA     lne
+        MOV     B,A
+        CALL    pbinbcd
+        RST     reset           ; Warm starts MINOL
+;
+;--------------------------------
+; Get value of ASCII numbers.
+;
+mkbin:  PUSH    D
+        DCX     H
+        MOV     A,M
+        SUI     zero
+        MOV     B,A
+        DCX     H
+        MOV     A,M
+        CALL    chekn
+        JC      stoc
+        MVI     C,0
+        MVI     E,0
+        JMP     ink2
+;
+stoc:   SUI     zero
+        MOV     C,A
+        DCX     H
+        MOV     A,M
+        CALL    chekn
+        JC      stoe
+        MVI     E,0
+        JMP     ink3
+;
+stoe:   MOV     A,M
+        SUI     zero
+        MOV     E,A
+ink3:   INX     H
+ink2:   INX     H
+        INX     H
+        CALL    bcdbin
+        MOV     A,B
+        STA     bin
+        POP     D
+        RET
+;
+;--------------------------------
+; Get address of variable.
+;
+getadr: PUSH    H
+        LXI     D,VarStor
+        SUI     upA
+        MVI     H,0
+        MOV     L,A
+        DAD     D
+        XCHG
+        POP     H
+        RET
+;
+;--------------------------------
+; Print text pointed by DE.
+;
+PrnTxt: LDAX    D
+        CPI     255
+        RZ
+        RST     output
+        INX     D
+        JMP     PrnTxt
+;
+;--------------------------------
+; Check is char is a letter.
+;
+chekltr:
+        STC
+        CMC
+        CPI     upA             ; Assume upper case only... (TTY)
+        JC      notal
+        STC
+        CPI     upZ+1
+        RET
+;
+notal:  CMC
+        RET
+;
+;--------------------------------
+; Variables (A-Z) are stored here.
+;
+VarStor:DS      27              ; Variable storage
+VarEnd: DS      1
+;
+;--------------------------------
+; Check for statement terminator (CR or  :) .
+;
+term:   CPI     cr
+        JZ      yes
+        CPI     colon
+        JZ      yes
+        STC
+        CMC
+        RET
+;
+yes:    STC
+        RET
+;
+;--------------------------------
+; Check if char is a number.
+;
+chekn:  STC
+        CMC
+        CPI     zero
+        JC      notan
+        STC
+        CPI     nine+1
+        RET
+;
+notan:  CMC
+        RET
+;
+;--------------------------------
+; BCD to BINary routine.
+;
+bcdbin: MVI     A,10
+        ADD     B
+        MOV     B,A
+        DCR     C
+        JNZ     bcdbin
+        MOV     C,E
+        MOV     A,E
+        CPI     255
+thi:    RZ
+        MVI     A,100
+        ADD     B
+        MOV     B,A
+        DCR     C
+        JMP     thi
+;
+;--------------------------------
+; LIST command executor.
+;
+list:   LXI     D,prog+1
+nexn:   LDAX    D
+        CPI     255
+        JZ      lpub
+        MOV     B,A
+        CALL    pbinbcd
+        MVI     A,space
+        RST     output
+        INX     D
+        LDAX    D
+ou:     RST     output
+        CPI     cr
+        JNZ     mren
+        INX     D
+        RST     crlf            ; Start a new line
+        JMP     nexn
+;
+mren:   INX     D
+        LDAX    D
+        JMP     ou
+;
+;--------------------------------
+; Print BINary number.
+;
+pbinbcd:
+        PUSH    B
+        PUSH    D
+        MVI     D,0
+        MOV     C,D
+        MOV     A,B
+ifir:   SUI     100
+        JC      isec
+        INR     C
+        JMP     ifir
+;
+isec:   MVI     B,100
+        ADD     B
+        MOV     B,A
+        MVI     A,zero
+        ADD     C
+        CPI     zero
+        JZ      np
+        RST     output
+com:    MVI     C,0
+        MOV     A,B
+ithr:   SUI     10
+        JC      for
+        INR     C
+        JMP     ithr
+;
+for:    MVI     B,10
+        ADD     B
+        MOV     B,A
+        MVI     A,zero
+        ADD     C
+        CPI     zero
+        JZ      inu
+ipr:    RST     output
+dpr:    MVI     A,zero
+        ADD     B
+        RST     output
+        POP     D
+        POP     B
+        RET
+;
+np:     MVI     D,1
+        JMP     com
+;
+inu:    MOV     C,A
+        XRA     A
+        CMP     D
+        MOV     A,C
+        JNZ     dpr
+        JMP     ipr
+;
+;--------------------------------
+; Saves BC, and calls MKBIN.
+;
+sure:   PUSH    B
+        CALL    mkbin
+        POP     B
+        RET
+;
+;--------------------------------
+; Adds 255 terminator at end of input text.
+;
+help:   INX     H
+        MOV     M,B
+        INX     H
+        MVI     M,255
+        RET
+;
+;--------------------------------
+; IF statement executor.
+;
+xif:    LXI     D,expr
+ngo:    INX     H               ; First expression
+        MOV     A,M
+        CPI     number          ; Not equal?
+        JZ      comp
+        CPI     equal           ; Equal ?
+        JZ      comp
+        CPI     lesst           ; Less than ?
+        JZ      comp
+        CALL    term
+        JC      err5
+        STAX    D
+        INX     D
+        JMP     ngo
+;
+; Compare ? with ?
+;
+comp:   PUSH    PSW
+        MVI     A,cr
+        STAX    D
+        CALL    exprs
+        PUSH    B
+        LXI     D,expr
+nxtvr:  INX     H               ; Second expression
+        MOV     A,M
+        CPI     semico
+        JZ      phi
+        CALL    term
+        JC      err5
+        STAX    D
+        INX     D
+        JMP     nxtvr
+;
+phi:    INX     H
+        MVI     A,cr
+        STAX    D
+        CALL    exprs
+        POP     D
+        POP     PSW
+        CPI     number          ; check relational operator
+        JZ      noteq
+        CPI     lesst
+        JZ      lessth
+        MOV     A,E             ; Check if =
+        CMP     C
+        JZ      exec
+        JMP     lpub
+;
+lessth: MOV     A,E             ; Check if <
+        CMP     C
+        JNC     lpub
+        JMP     exec
+;
+;--------------------------------
+; Get address of memory location.
+;
+val:    PUSH    D
+        LXI     D,expr
+shme:   INX     H
+        MOV     A,M
+        STAX    D
+        CALL    term
+        INX     D
+        JC      err5
+        CPI     comma
+        JNZ     shme
+        DCX     D
+        MVI     A,cr
+        STAX    D
+        CALL    exprs
+        PUSH    B
+        LXI     D,expr
+mig:    INX     H
+        MOV     A,M
+        STAX    D
+        CALL    term
+        INX     D
+        JC      err5
+        CPI     Rparen
+        JNZ     mig
+        DCX     D
+        MVI     A,cr
+        STAX    D
+        CALL    exprs
+        MOV     A,C
+        POP     B
+        MOV     B,C
+        MOV     C,A
+        POP     D
+        RET
+;
+;--------------------------------
+; Data storage.
+;
+        DB      '+'             ; Prepares an addition?
+expr:   DS      31              ; Expression buffer
+txt:    DS      72              ; Line buffer (input text)
+TxtEnd: DS      1
+;
+;--------------------------------
+        ORG     0700H           ; Start of program in MINOL
+;--------------------------------
+prog:   DB      cr, 255         ; = NEW by default
+;
+;--------------------------------
+        ORG     0FFFH           ; End of 4KB memory
+;--------------------------------
+MemEnd:
+;
+;--------------------------------
+;
+        END     MINOL           ; MITS Altair 8800 with 4KB of RAM
