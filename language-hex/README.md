@@ -1,6 +1,6 @@
 # Altair Languages
 
-## General Instructions
+## General Instructions (Windows Oriented)
 
 These .hex files can be loaded on the Arduino-based Altair clone using the built in debugger using the approach described below.
 
@@ -16,6 +16,26 @@ These .hex files can be loaded on the Arduino-based Altair clone using the built
 * Now type '!' for a hard reset (the same as STOP+RESET from the front panel). This will, among other things, reset the PC (program counter) to 0. You will get the status dump again also.
 * Now type 'r' (it must be lower case) to begin running things (from the PC which we reset to 0 with the last command).
 * At this point, the terminal should should any startup messages associated with the language you are running as well as the prompt. There may also be questions such as memory size or terminal width to answer.
+
+## General Instructions (Linux)
+
+*I tend to use Linux, but have primarily used Windows in working with the Altair Clone to this point. Len provided the following guide to using Linux to load the .hex files.*
+
+Here's how we're loading your .hex files here, running under Linux using the bash shell and using the Putty terminal emulator at 9600 baud (notes provided by my son). This will not work with "screen", as that software wants exclusive port access, which Putty doesn't, apparently:
+
+* connect the Altairduino to your computer and wait for it to come up
+* From power up, hit STOP and then RESET.
+* connect with putty (don't forget to resize)
+* Hold STOP+AUX1(UP) to enter the setup menu.
+* From the terminal, enter "i" to enable input, "d" to enable debugging, and then 'x' to exit setup and dump into the debugger. You will see the PC (program counter), SP (stack pointer), registers, and such displayed, but you can ignore that.
+* You should still be in the monitor, so if you type 'H' you should see the message, "Reading HEX data...".
+* in terminal - get hex program in a file (for example tb_hex.hex)
+* assuming serial is /dev/ttyACM0 run this - substitute the actual serial device and .hex filename for "/dev/ttyACM0" and "tb_hex.hex" shown here:
+  * for i in \`cat tb_hex.hex\`; do echo -n "\*"; echo "$i" > /dev/ttyACM0;
+  * sleep 0.1; done;echo
+  * Note the backquote - \` - characters in the above, and watch the putty window as \*'s show up. You should get one per file line - and in the end - you should see "Success."
+* on panel: hit STOP and then RESET
+* then hit RUN and you should see it start up on putty
 
 ## Palo Alto Tiny BASIC 1.0
 
@@ -73,6 +93,39 @@ This is a very complete and powerful implementation of BASIC.
 
 Copyright (c) 1977-1995 by Robert Swartz. All rights reserved.
 
+## MINOL
+
+MINOL first appeared in the article "MINOL--Tiny BASIC with Strings in 1.75K Bytes" by Erik T. Mueller in the April 1976 edition of Doctor Dobbs Journal.
+
+You can follow the direction above and it seems to work fine. The .hex file initializes everything that seems to need to be initialized, including a "blank" program area. It would not hurt to type NEW, but it doesn't seem necessary.
+
+The documentation and comments in the object code seem to indicated that $0000 is actually the "warm start" entry and that the "cold start" entry is at $02E8, but I get an error message when I start it that way instead of just starting execution at $0000.
+
+You should end up at the MIDOL prompt which is a right bracket ("]")
+
+Readable code is discussed a lot and MIDOL is the only language I've worked with that not only ignores spaces in the source code, but specifically prohibits them. The line input route
+
+    ino:    RST     input
+            MOV     B,A
+            MOV     A,C
+            CPI     0
+            MOV     A,B
+            JNZ     mid
+            CPI     space
+            JZ      ino             ; Do not accept space if outside quotes
+
+Spaces are allowed in quoted text, but not in the source.
+
+The command set is a bit different than the typical Tiny BASIC, so if you want to try something here is the code to count and print the number 1 to 10.
+
+    10 LETX=1
+    20 PRX
+    30 LETX=X+1
+    40 IFX<11;GOTO20
+    99 END
+
+The current .hex file is true to the original and assumes only 4K of RAM is available with less than half of that occupied by MIDOL. This value is stored as a little endian work at $0001 ($FF $0F) and can be modified. I modified some of the other languages to allow longer programs but, to be honest, I have a hard time imagining anyone writing a MIDOL program that will fill even the remainer of the 4K. (If you do, just patch the .hex file by adding a line just before the last record with something like :02000100FF7F7F.)
+
 ## Original Micro-soft BASIC 1.0
 
 This is a copy of the original BASIC written for the Altair by Bill Gates and Paul Allen. Because it represents such an important part of microcomputer history, it is included here for informational and educational purposes only.
@@ -97,9 +150,11 @@ I had a little trouble definatively determining who first wrote VTL, but thanks 
 
 Thanks to Stephen A. Ness, author of XYBASIC, and to Robert Swartz, the current copyright holder who allowed it to be offered as an open source project. Also to Emmanuel Roche, Steven Hirsch, and Udo Munk for bringing it back to life.
 
+Thanks to Erik Mueller, author of MINOL, and to Emmanuel Roche for reentering the original code from hardcopy.
+
 Thanks to Bill Gates and Paul Allen for launching the language that a generation of programers grew up with and (for the most part) loved.
 
-And last but not least, to David Hansel for the patches for PA Tiny BASIC 1.0 and to Tom Lake for converting VTL-2 from a ROM to a .hex file.
+And last but not least, to David Hansel for the patches for PA Tiny BASIC 1.0, to Tom Lake for converting VTL-2 from a ROM to a .hex file, and Len & son for the Linux instructions.
 
 ## And the fine print...
 
