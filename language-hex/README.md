@@ -1,5 +1,17 @@
 # Altair Languages
 
+These files have been pulled together with help from and for use by various users of the Arduino-based Altair 8800 clone. Those interested in retro-computing are also often interested in the various languages used on early microcomputers. While most of this material has been available for some time (like since the 1970s in reality), it was not necessarily easy to load and use. The goal of this effort was to make them more widely available by making them easier to load and get started with.
+
+In the good old days, most of these would have been loaded using a first-stage boot loader entered by hand to load a second-stage loader from paper tape. That second-stage loader would then have loaded the remainder of the tape and the actual program (or, in this case, language) into memory. Once that was done, the front panel would have been used to stop and reset the processor and then run the loaded program. If you want to fully relive that process, there are a few of these languages floating around in .tap (paper tape image) format along with information on how to go through the process of loading them.
+
+That is one of those things that everyone should try at least once but can become comberson for many of us after the first dozen or so times...
+
+General discussion or questions related to any of these languages for the Altair clone is typically found on the relevant group message board:
+
+https://groups.google.com/forum/#!forum/altair-duino
+
+Any additional contributions or ideas for languages to include is welcome. Several are "in progress" and will be placed here as they become available.
+
 ## General Instructions (Windows Oriented)
 
 These .hex files can be loaded on the Arduino-based Altair clone using the built in debugger using the approach described below.
