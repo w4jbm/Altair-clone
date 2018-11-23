@@ -113,9 +113,9 @@ You can follow the direction above and it seems to work fine. The .hex file init
 
 The documentation and comments in the object code seem to indicated that $0000 is actually the "warm start" entry and that the "cold start" entry is at $02E8, but I get an error message when I start it that way instead of just starting execution at $0000.
 
-You should end up at the MIDOL prompt which is a right bracket ("]")
+You should end up at the MINOL prompt which is a right bracket ("]")
 
-Readable code is discussed a lot and MIDOL is the only language I've worked with that not only ignores spaces in the source code, but specifically prohibits them. The line input route
+Readable code is discussed a lot and MINOL is the only language I've worked with that not only ignores spaces in the source code, but specifically prohibits them. The line input route is hard-coded to remove them.
 
     ino:    RST     input
             MOV     B,A
@@ -136,7 +136,7 @@ The command set is a bit different than the typical Tiny BASIC, so if you want t
     40 IFX<11;GOTO20
     99 END
 
-The current .hex file is true to the original and assumes only 4K of RAM is available with less than half of that occupied by MIDOL. This value is stored as a little endian work at $0001 ($FF $0F) and can be modified. I modified some of the other languages to allow longer programs but, to be honest, I have a hard time imagining anyone writing a MIDOL program that will fill even the remainer of the 4K. (If you do, just patch the .hex file by adding a line just before the last record with something like :02000100FF7F7F.)
+The current .hex file is true to the original and assumes only 4K of RAM is available with less than half of that occupied by MINOL. This value is stored as a little endian work at $0001 ($FF $0F) and can be modified. I modified some of the other languages to allow longer programs but, to be honest, I have a hard time imagining anyone writing a MIDOL program that will fill even the remainer of the 4K. (If you do, just patch the .hex file by adding a line just before the last record with something like :02000100FF7F7F.)
 
 ## Original Micro-soft BASIC 1.0
 
