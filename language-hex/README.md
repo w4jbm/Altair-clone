@@ -136,7 +136,7 @@ The command set is a bit different than the typical Tiny BASIC, so if you want t
     40 IFX<11;GOTO20
     99 END
 
-The current .hex file is true to the original and assumes only 4K of RAM is available with less than half of that occupied by MINOL. This value is stored as a little endian work at $0001 ($FF $0F) and can be modified. I modified some of the other languages to allow longer programs but, to be honest, I have a hard time imagining anyone writing a MIDOL program that will fill even the remainer of the 4K. (If you do, just patch the .hex file by adding a line just before the last record with something like :02000100FF7F7F.)
+The current .hex file is true to the original and assumes only 4K of RAM is available with less than half of that occupied by MINOL. This value is stored as a little endian work at $0001 ($FF $0F) and can be modified. I modified some of the other languages to allow longer programs but, to be honest, I have a hard time imagining anyone writing a MINOL program that will fill even the remainer of the 4K. (If you do, just patch the .hex file by adding a line just before the last record with something like :02000100FF7F7F.)
 
 ## Original Micro-soft BASIC 1.0
 
